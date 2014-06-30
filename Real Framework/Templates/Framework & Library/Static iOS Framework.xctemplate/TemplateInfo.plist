@@ -360,8 +360,10 @@ class Project:
     # Get the files from a build phase.
     #
     def get_build_phase_files(self, build_phase_name, filter_func):
-        build_phase = filter(lambda x: x['isa'] == build_phase_name, self.target['buildPhases'])[0]
-        build_files = filter(filter_func, build_phase['files'])
+        if len(filter(lambda x: x['isa'] == build_phase_name, self.target['buildPhases'])) > 0 :
+            build_phase = filter(lambda x: x['isa'] == build_phase_name, self.target['buildPhases'])[0]
+        build_files = filter(lambda x: x['fileRef']['isa'] != 'XCVersionGroup', build_phase['files'])
+        build_files = filter(filter_func, build_files)
         return [x['fileRef'] for x in build_files]
 
     # Get the truncated paths of all headers that start with the specified
